@@ -26,12 +26,15 @@ async function upload() {
   const data = await res.json();
   const videoURL = data.secure_url;
 
-  // 로컬 저장 (영상 목록 저장용)
-  let videos = JSON.parse(localStorage.getItem("videos") || "[]");
+  // 영상 목록 저장
+  let videos = JSON.parse(localStorage.getItem("mytube_videos") || "[]");
   videos.push(videoURL);
-  localStorage.setItem("videos", JSON.stringify(videos));
+  localStorage.setItem("mytube_videos", JSON.stringify(videos));
 
   alert("업로드 완료!! 🎉");
+
+  // 메인페이지로 이동
+  window.location.href = "index.html";
 }
 </script>
 

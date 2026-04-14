@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MyTube Login</title>
+  <title>MyTube</title>
 </head>
 <body>
-  <h1>MyTube 로그인</h1>
-  <button id="loginBtn">Google로 로그인</button>
-  <button id="logoutBtn">로그아웃</button>
+  <h1>MyTube 🎬</h1>
+  <a href="upload.html">영상 업로드</a>
+  <hr>
+  <div id="videos"></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } 
-from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAbUfovifvrl3o1GYAOkxuT-abpGFHvtPc",
@@ -19,26 +19,23 @@ const firebaseConfig = {
   projectId: "mytube-54551",
   storageBucket: "mytube-54551.firebasestorage.app",
   messagingSenderId: "687914851963",
-  appId: "1:687914851963:web:8697c270248d1825934cde",
-  measurementId: "G-58GP0M7B43"
+  appId: "1:687914851963:web:8697c270248d1825934cde"
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
+const db = getFirestore(app);
 
-loginBtn.onclick = async () => {
-  await signInWithPopup(auth, provider);
-};
+const videosDiv = document.getElementById("videos");
+const querySnapshot = await getDocs(collection(db, "videos"));
 
-logoutBtn.onclick = async () => {
-  await signOut(auth);
-};
-
-onAuthStateChanged(auth, user => {
-  if(user){
-    document.body.innerHTML += `<p>로그인됨: ${user.displayName}</p>`;
-  }
+querySnapshot.forEach((doc) => {
+  const video = doc.data();
+  videosDiv.innerHTML += `
+    <video width="400" controls>
+      <source src="${video.url}" type="video/mp4">
+    </video>
+    <hr>
+  `;
 });
 </script>
 </body>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MyTube</title>
+  <title>SongHyeonElementarySchoolTube</title>
 </head>
 <body>
   <h1>MyTube 🎬</h1>
@@ -12,8 +12,11 @@
 
 <script>
 const videosDiv = document.getElementById("videos");
-const videos = JSON.parse(localStorage.getItem("videos") || "[]");
 
+// 저장된 영상 불러오기
+const videos = JSON.parse(localStorage.getItem("mytube_videos") || "[]");
+
+// 최신 영상 위로
 videos.reverse().forEach(url => {
   videosDiv.innerHTML += `
     <video width="400" controls>

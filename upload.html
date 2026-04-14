@@ -1,27 +1,39 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>MyTube</title>
+  <title>영상 업로드</title>
 </head>
 <body>
-  <h1>MyTube 🎬</h1>
-  <a href="upload.html">영상 업로드</a>
-  <hr>
+  <h1>영상 업로드 🎬</h1>
 
-  <div id="videos"></div>
+  <input type="file" id="file">
+  <button onclick="upload()">업로드</button>
 
 <script>
-const videosDiv = document.getElementById("videos");
-const videos = JSON.parse(localStorage.getItem("videos") || "[]");
+async function upload() {
+  const file = document.getElementById("file").files[0];
+  if(!file) return alert("파일 선택 ㄱ");
 
-videos.reverse().forEach(url => {
-  videosDiv.innerHTML += `
-    <video width="400" controls>
-      <source src="${url}" type="video/mp4">
-    </video>
-    <hr>
-  `;
-});
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "dchfip45v");
+
+  const res = await fetch("https://api.cloudinary.com/v1_1/dchfip45v/video/upload", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+  const videoURL = data.secure_url;
+
+  // 로컬 저장 (영상 목록 저장용)
+  let videos = JSON.parse(localStorage.getItem("videos") || "[]");
+  videos.push(videoURL);
+  localStorage.setItem("videos", JSON.stringify(videos));
+
+  alert("업로드 완료!! 🎉");
+}
 </script>
+
 </body>
 </html>

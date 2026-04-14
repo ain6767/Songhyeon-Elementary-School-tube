@@ -6,13 +6,19 @@
 <body>
   <h1>영상 업로드 🎬</h1>
 
-  <input type="file" id="file">
+  <input id="channel" placeholder="채널 이름"><br><br>
+  <input id="title" placeholder="영상 제목"><br><br>
+  <input type="file" id="file"><br><br>
+
   <button onclick="upload()">업로드</button>
 
 <script>
 async function upload() {
   const file = document.getElementById("file").files[0];
-  if(!file) return alert("파일 선택 ㄱ");
+  const title = document.getElementById("title").value;
+  const channel = document.getElementById("channel").value;
+
+  if(!file || !title || !channel) return alert("다 입력해라");
 
   const formData = new FormData();
   formData.append("file", file);
@@ -24,16 +30,20 @@ async function upload() {
   });
 
   const data = await res.json();
-  const videoURL = data.secure_url;
 
-  // 영상 목록 저장
   let videos = JSON.parse(localStorage.getItem("mytube_videos") || "[]");
-  videos.push(videoURL);
+
+  videos.push({
+    url: data.secure_url,
+    title: title,
+    channel: channel,
+    likes: 0,
+    comments: []
+  });
+
   localStorage.setItem("mytube_videos", JSON.stringify(videos));
 
-  alert("업로드 완료!! 🎉");
-
-  // 메인페이지로 이동
+  alert("업로드 완료!");
   window.location.href = "index.html";
 }
 </script>

@@ -4,35 +4,46 @@
   <title>영상 업로드</title>
 </head>
 <body>
-  <h1>영상 업로드</h1>
+  <h1>영상 업로드 🎥</h1>
 
   <input type="file" id="videoFile">
-  <br><br>
-  <button id="uploadBtn">업로드</button>
+  <button onclick="uploadVideo()">업로드</button>
 
-  <script>
-    document.getElementById("uploadBtn").onclick = async function () {
-      const file = document.getElementById("videoFile").files[0];
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-storage.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
 
-      if (!file) {
-        alert("파일 선택 먼저!");
-        return;
-      }
+const firebaseConfig = {
+  apiKey: "AIzaSyAbUfovifvrl3o1GYAOkxuT-abpGFHvtPc",
+  authDomain: "mytube-54551.firebaseapp.com",
+  projectId: "mytube-54551",
+  storageBucket: "mytube-54551.firebasestorage.app",
+  messagingSenderId: "687914851963",
+  appId: "1:687914851963:web:8697c270248d1825934cde"
+};
 
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "mytube");
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
+const db = getFirestore(app);
 
-      const response = await fetch("https://api.cloudinary.com/v1_1/dchfip45v/video/upload", {
-        method: "POST",
-        body: formData
-      });
+window.uploadVideo = async function() {
+  const file = document.getElementById("videoFile").files[0];
+  if (!file) return alert("영상 선택해!!");
 
-      const data = await response.json();
-      console.log(data);
-      alert("업로드 완료 🎉");
-    };
-  </script>
+  const storageRef = ref(storage, "videos/" + file.name);
 
+  alert("업로드 시작...");
+  await uploadBytes(storageRef, file);
+
+  const url = await getDownloadURL(storageRef);
+
+  await addDoc(collection(db, "videos"), {
+    url: url
+  });
+
+  alert("업로드 완료!! 🎉");
+}
+</script>
 </body>
 </html>

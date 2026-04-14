@@ -12,14 +12,30 @@
 
   <button onclick="upload()">업로드</button>
 
-<script>
-async function upload() {
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAbUfovifvrl3o1GYAOkxuT-abpGFHvtPc",
+  authDomain: "mytube-54551.firebaseapp.com",
+  projectId: "mytube-54551",
+  storageBucket: "mytube-54551.firebasestorage.app",
+  messagingSenderId: "687914851963",
+  appId: "1:687914851963:web:8697c270248d1825934cde"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.upload = async function() {
   const file = document.getElementById("file").files[0];
   const title = document.getElementById("title").value;
   const channel = document.getElementById("channel").value;
 
   if(!file || !title || !channel) return alert("다 입력해라");
 
+  // 1️⃣ Cloudinary 업로드
   const formData = new FormData();
   formData.append("file", file);
   formData.append("upload_preset", "mytube");
@@ -31,17 +47,12 @@ async function upload() {
 
   const data = await res.json();
 
-  let videos = JSON.parse(localStorage.getItem("mytube_videos") || "[]");
-
-  videos.push({
+  // 2️⃣ Firestore 저장 (핵심🔥)
+  await addDoc(collection(db, "videos"), {
     url: data.secure_url,
     title: title,
-    channel: channel,
-    likes: 0,
-    comments: []
+    channel: channel
   });
-
-  localStorage.setItem("mytube_videos", JSON.stringify(videos));
 
   alert("업로드 완료!");
   window.location.href = "index.html";

@@ -16,16 +16,16 @@ document.getElementById("uploadBtn").onclick = async () => {
 
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", "mytube"); // 곧 만들거임
+  formData.append("upload_preset", "mytube");
 
-  const res = await fetch("https://api.cloudinary.com/v1_1/dchfip45v/video/upload", {", {
+  const res = await fetch("https://api.cloudinary.com/v1_1/dchfip45v/video/upload", {
     method: "POST",
     body: formData
   });
 
   const data = await res.json();
+  console.log(data);
   alert("업로드 완료 🎉");
-  console.log(data.secure_url);
 };
 </script>
 </body>

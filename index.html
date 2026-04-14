@@ -1,1 +1,45 @@
-<h1>MyTube 준비중 🚀</h1>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MyTube Login</title>
+</head>
+<body>
+  <h1>MyTube 로그인</h1>
+  <button id="loginBtn">Google로 로그인</button>
+  <button id="logoutBtn">로그아웃</button>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } 
+from "https://www.gstatic.com/firebasejs/12.12.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAbUfovifvrl3o1GYAOkxuT-abpGFHvtPc",
+  authDomain: "mytube-54551.firebaseapp.com",
+  projectId: "mytube-54551",
+  storageBucket: "mytube-54551.firebasestorage.app",
+  messagingSenderId: "687914851963",
+  appId: "1:687914851963:web:8697c270248d1825934cde",
+  measurementId: "G-58GP0M7B43"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
+loginBtn.onclick = async () => {
+  await signInWithPopup(auth, provider);
+};
+
+logoutBtn.onclick = async () => {
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth, user => {
+  if(user){
+    document.body.innerHTML += `<p>로그인됨: ${user.displayName}</p>`;
+  }
+});
+</script>
+</body>
+</html>

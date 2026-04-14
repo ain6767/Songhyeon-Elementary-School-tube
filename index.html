@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>SongHyeonElementarySchoolTube</title>
+  <title>MyTube</title>
 </head>
 <body>
   <h1>MyTube 🎬</h1>
@@ -11,17 +11,47 @@
   <div id="videos"></div>
 
 <script>
+let videos = JSON.parse(localStorage.getItem("mytube_videos") || "[]");
 const videosDiv = document.getElementById("videos");
 
-// 저장된 영상 불러오기
-const videos = JSON.parse(localStorage.getItem("mytube_videos") || "[]");
+function save() {
+  localStorage.setItem("mytube_videos", JSON.stringify(videos));
+}
 
-// 최신 영상 위로
-videos.reverse().forEach(url => {
+function likeVideo(index){
+  videos[index].likes++;
+  save();
+  location.reload();
+}
+
+function addComment(index){
+  const text = document.getElementById("comment"+index).value;
+  if(!text) return;
+  videos[index].comments.push(text);
+  save();
+  location.reload();
+}
+
+videos.reverse().forEach((video, index) => {
   videosDiv.innerHTML += `
+    <h3>${video.title}</h3>
+    <b>채널: ${video.channel}</b><br><br>
+
     <video width="400" controls>
-      <source src="${url}" type="video/mp4">
-    </video>
+      <source src="${video.url}" type="video/mp4">
+    </video><br>
+
+    👍 좋아요: ${video.likes}
+    <button onclick="likeVideo(${videos.length-1-index})">좋아요</button>
+
+    <h4>댓글</h4>
+    <input id="comment${videos.length-1-index}" placeholder="댓글쓰기">
+    <button onclick="addComment(${videos.length-1-index})">등록</button>
+
+    <ul>
+      ${video.comments.map(c => `<li>${c}</li>`).join("")}
+    </ul>
+
     <hr>
   `;
 });

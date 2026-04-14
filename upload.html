@@ -16,7 +16,7 @@ async function upload() {
 
   const formData = new FormData();
   formData.append("file", file);
-  formData.append("upload_preset", "dchfip45v");
+  formData.append("upload_preset", "mytube");
 
   const res = await fetch("https://api.cloudinary.com/v1_1/dchfip45v/video/upload", {
     method: "POST",

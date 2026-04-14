@@ -10,23 +10,29 @@
   <br><br>
   <button id="uploadBtn">업로드</button>
 
-<script>
-document.getElementById("uploadBtn").onclick = async () => {
-  const file = document.getElementById("videoFile").files[0];
+  <script>
+    document.getElementById("uploadBtn").onclick = async function () {
+      const file = document.getElementById("videoFile").files[0];
 
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", "mytube");
+      if (!file) {
+        alert("파일 선택 먼저!");
+        return;
+      }
 
-  const res = await fetch("https://api.cloudinary.com/v1_1/dchfip45v/video/upload", {
-    method: "POST",
-    body: formData
-  });
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "mytube");
 
-  const data = await res.json();
-  console.log(data);
-  alert("업로드 완료 🎉");
-};
-</script>
+      const response = await fetch("https://api.cloudinary.com/v1_1/dchfip45v/video/upload", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+      console.log(data);
+      alert("업로드 완료 🎉");
+    };
+  </script>
+
 </body>
 </html>

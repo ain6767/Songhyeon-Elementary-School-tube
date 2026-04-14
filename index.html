@@ -7,32 +7,17 @@
   <h1>MyTube 🎬</h1>
   <a href="upload.html">영상 업로드</a>
   <hr>
+
   <div id="videos"></div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAbUfovifvrl3o1GYAOkxuT-abpGFHvtPc",
-  authDomain: "mytube-54551.firebaseapp.com",
-  projectId: "mytube-54551",
-  storageBucket: "mytube-54551.firebasestorage.app",
-  messagingSenderId: "687914851963",
-  appId: "1:687914851963:web:8697c270248d1825934cde"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
+<script>
 const videosDiv = document.getElementById("videos");
-const querySnapshot = await getDocs(collection(db, "videos"));
+const videos = JSON.parse(localStorage.getItem("videos") || "[]");
 
-querySnapshot.forEach((doc) => {
-  const video = doc.data();
+videos.reverse().forEach(url => {
   videosDiv.innerHTML += `
     <video width="400" controls>
-      <source src="${video.url}" type="video/mp4">
+      <source src="${url}" type="video/mp4">
     </video>
     <hr>
   `;

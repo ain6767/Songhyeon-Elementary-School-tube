@@ -10,28 +10,22 @@
   <br><br>
   <button id="uploadBtn">업로드</button>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
-import { getStorage, ref, uploadBytes } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-storage.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAbUfovifvrl3o1GYAOkxuT-abpGFHvtPc",
-  authDomain: "mytube-54551.firebaseapp.com",
-  projectId: "mytube-54551",
-  storageBucket: "mytube-54551.firebasestorage.app",
-  messagingSenderId: "687914851963",
-  appId: "1:687914851963:web:8697c270248d1825934cde",
-  measurementId: "G-58GP0M7B43"
-};
-
-const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
-
-uploadBtn.onclick = async () => {
+<script>
+document.getElementById("uploadBtn").onclick = async () => {
   const file = document.getElementById("videoFile").files[0];
-  const storageRef = ref(storage, "videos/" + file.name);
-  await uploadBytes(storageRef, file);
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "mytube"); // 곧 만들거임
+
+  const res = await fetch("https://api.cloudinary.com/v1_1/dchfip45v/video/upload", {", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
   alert("업로드 완료 🎉");
+  console.log(data.secure_url);
 };
 </script>
 </body>

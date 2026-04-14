@@ -1,49 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>영상 업로드</title>
+  <title>MyTube</title>
 </head>
 <body>
-  <h1>영상 업로드 🎥</h1>
+  <h1>MyTube 🎬</h1>
+  <a href="upload.html">영상 업로드</a>
+  <hr>
 
-  <input type="file" id="videoFile">
-  <button onclick="uploadVideo()">업로드</button>
+  <div id="videos"></div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-storage.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-firestore.js";
+<script>
+const videosDiv = document.getElementById("videos");
+const videos = JSON.parse(localStorage.getItem("videos") || "[]");
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAbUfovifvrl3o1GYAOkxuT-abpGFHvtPc",
-  authDomain: "mytube-54551.firebaseapp.com",
-  projectId: "mytube-54551",
-  storageBucket: "mytube-54551.firebasestorage.app",
-  messagingSenderId: "687914851963",
-  appId: "1:687914851963:web:8697c270248d1825934cde"
-};
-
-const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
-const db = getFirestore(app);
-
-window.uploadVideo = async function() {
-  const file = document.getElementById("videoFile").files[0];
-  if (!file) return alert("영상 선택해!!");
-
-  const storageRef = ref(storage, "videos/" + file.name);
-
-  alert("업로드 시작...");
-  await uploadBytes(storageRef, file);
-
-  const url = await getDownloadURL(storageRef);
-
-  await addDoc(collection(db, "videos"), {
-    url: url
-  });
-
-  alert("업로드 완료!! 🎉");
-}
+videos.reverse().forEach(url => {
+  videosDiv.innerHTML += `
+    <video width="400" controls>
+      <source src="${url}" type="video/mp4">
+    </video>
+    <hr>
+  `;
+});
 </script>
 </body>
 </html>
